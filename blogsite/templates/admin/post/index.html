@@ -1,0 +1,46 @@
+{% extends "admin/base.html" %}
+{% block content %}
+    <h1>Post Page<a href="{%url 'create_post'%}" class="btn btn-success float-right mr-3">Them</a></h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Status</th>
+            <th scope="col">Author</th>
+            <th scope="col">Image</th>
+            <th scope="col">categories</th>
+            <th scope="col">Tags</th>
+            <th scope="col">read_count</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%for data in post%}
+          <tr>
+            <td>{{data.title}}</td>
+            <td>{{data.status}}</td>
+            <td>{{data.author}}</td>
+            <td><img src="{{MEDIA_URL}}{{ data.image }}" alt="Ảnh" height=50></td>
+            <td>
+              {% for category in data.categories.all %}
+                <span>{{ category.name }},</span>
+              {% endfor %}
+            </td>
+            <td>
+              {% for tag in data.tags.all %}
+                <span>{{ tag.name }}</span>{% if not forloop.last %}, {% endif %}
+              {% endfor %}
+            </td>
+            <td>{{data.read_count}}</td>
+            <td>
+                <a href="{%url 'edit_post' data.id%}" class="btn btn-success">Edit</a>
+                <form method="post" action="{%url 'delete_post' data.id%}">
+                  {% csrf_token %}
+                  <input type="submit" class="btn btn-danger" value="Delete">
+                </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

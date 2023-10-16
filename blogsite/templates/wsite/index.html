@@ -1,0 +1,182 @@
+{% extends "wsite/base.html" %}
+{%load static%}
+{%block content%}
+    {% comment %} báo mới {% endcomment %}
+    <div class="container">
+        <div class="jumbotron jumbotron-fluid mb-3 pt-0 pb-0 bg-lightblue position-relative">
+            <div class="pl-4 pr-0 h-100 tofront">
+                <div class="row justify-content-between">
+                    <div class="col-md-6 pt-6 pb-6 align-self-center">
+                        {% if new_post %}
+                            <h1 class="secondfont mb-3 font-weight-bold">
+                                {{ new_post.title }}
+                            </h1>
+                            <p class="mb-3" style="word-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                                {{ new_post.content }}
+                            </p>
+                            <h4 class="mb-2">Published on: <span class="text-muted">{{ new_post.created_at }}</span></h4>
+                            <h4 class="mb-2">Author: <span class="text-muted">{{ new_post.author }}</span></h4>
+                            <a href="{% url 'detail_post' post_id=new_post.id %}" class="btn btn-dark">Read More</a>
+                        {% else %}
+                            <p>Không có bài viết mới.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6 d-none d-md-block pr-0" style="background-size:cover;">
+                        {% if new_post %}
+                            <img src="{{ MEDIA_URL }}{{ new_post.image }}" alt="Ảnh DXT" height=100%>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{%endblock%}
+{%block categories%}
+<style>
+    .card-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+        margin-right: 20px;
+    }
+</style>
+<div class="container">
+    <section class="featured-posts">
+            <div class="section-title">
+                <h2><span>
+                    <a href="#">Featured</a> - <a href="#">HOT</a>
+                </span></h2>
+            </div>
+            <div class="card-columns listfeaturedtag">
+                {%for post in limited_posts%}
+                <div class="card">
+                    <div class="row">
+                        <div class="col-md-5 wrapthumbnail">
+                            <a href="{% url 'detail_post' post_id=post.id %}">
+                                <div class="thumbnail">
+                                    <img src="{{MEDIA_URL}}//{{ post.image }}" alt="Ảnh DXT" height="100%">
+                                </div>
+                            </a>    
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-block">
+                                <h2 class="card-title"><a href="{% url 'detail_post' post_id=post.id %}">{{post.title}}</a></h2>
+                                <h4 class="card-text">{{post.content}}</h4>
+                                <div class="metafooter">
+                                    <div class="wrapfooter">
+                                        <span class="meta-footer-thumb">
+                                         <img class="author-thumb" src="{{ post.author.userprofileinfo.profile_pic.url }}" alt="Sal">
+                                        </span>
+                                        <span class="author-meta">
+                                            <span class="post-name">{{post.author}}</span><br/>
+                                            <span class="post-date">{{post.created_at}}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+    </section>
+    </div>
+{%endblock%}
+
+{%block all_stories%}
+<style>
+</style>
+
+<div class="container">
+    <div class="row justify-content-between">
+        {% comment %} content-left {% endcomment %}
+        <div class="content-left col-md-8">
+            <h5 class="font-weight-bold spanborder"><span>All Stories</span></h5>
+            <div class="row">
+                {% if all_post %}
+                {% for post in all_post %}
+                <div class="col-md-10">
+                    <div class="mb-3 d-flex justify-content-between">
+                        <div class="pr-3">
+                            <h2 class="mb-1 h4 font-weight-bold">
+                                <a class="text-dark" href="{% url 'detail_post' post_id=post.id %}">{{ post.title }}</a>
+                            </h2>
+                            <p class="p_text" style="max-height: 3.6em; overflow: hidden; text-overflow: ellipsis; line-height: 1.2em;">
+                                {{ post.content }}
+                            </p>
+                            <div class="card-text text-muted small">
+                                {{ post.author }}
+                            </div>
+                            <small class="text-muted">{{ post.created_at }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <a href="{% url 'detail_post' post_id=post.id %}">
+                        <img height="100" width="100" src="{{ MEDIA_URL }}/{{ post.image }}">
+                    </a>
+                </div>
+                <hr>
+                {% endfor %}
+                {% else %}
+                Không có post
+                {% endif %}
+            </div>
+        </div>
+        {% comment %} content-right {% endcomment %}
+
+        <div class="content-right col-md-4 pl-4">
+            <h5 class="font-weight-bold spanborder"><span>Popular</span></h5>
+            {% if popular_post %}
+            <ol class="list-featured">
+                {% for post in popular_post %}
+                    <li>
+                        <span>
+                            <h6 class="font-weight-bold">
+                                <a href="{% url 'detail_post' post_id=post.id %}" class="text-dark">{{ post.title }}</a>
+                            </h6>
+                            <p class="text-muted">
+                                {{ post.author }}
+                            </p>
+                        </span>
+                    </li>
+                    <hr>
+                {% endfor %}
+            </ol>
+        {% else %}
+            không có
+        {% endif %}
+        </div>
+    </div>
+</div>
+{%endblock%}
+{% block category %}
+
+<div class="container"><hr>
+    <div id="myCarousel" class="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="row">
+                    {% if category  %}
+                        {% for data in category  %}
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{% url "post-category" data.id %}">{{data.name}}</a>
+                                    </h5>
+                                    <p class="card-text">Click to see details</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock category %}
+

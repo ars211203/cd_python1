@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+
+{% block content %}
+    <h1>User Page<a href="{%url 'CreateUser'%}" class="btn btn-success float-right mr-3">Them</a></h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Username</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+            {%for data in user%}
+          <tr>
+            <td>{{data.username}} </td>
+            <td>{{data.first_name}}</td>
+            <td>{{data.last_name}}</td>
+            <td>{{data.email}}</td>
+            <td class="btn-cell">
+              <a href="{% url 'edit_user' data.id %}" class="btn btn-success">Edit</a>
+              <form method="post" action="{% url 'delete_user' data.id %}">
+                  {% csrf_token %}
+                  <input type="submit" class="btn btn-danger" value="Delete">
+              </form>
+          </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

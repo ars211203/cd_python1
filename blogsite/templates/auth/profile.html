@@ -1,0 +1,104 @@
+{% extends "wsite/base.html" %}
+        
+{%block content%}
+<div class="container">
+    <section style="background-color: #eee;">
+        <div class="container py-3">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="card mb-4">
+                <div class="card-body text-center">
+                  {% if profile_user.0.profile_pic %}
+                      <img src="{{ profile_user.0.profile_pic.url }}" alt="Profile Picture">
+                  {% endif %}
+                  <h5 class="my-3">{{user.username}}</h5>
+                  <p class="text-muted mb-1">Mode: {{profile_user.0.mode}}</p>
+                  <div class="d-flex justify-content-center mb-2">
+                    {%if profile_user.0.mode == 'public'%}
+                      <a href="{%url 'mode_incognito'%}" class="btn btn-primary">Incognito</a>
+                    {% else %}
+                      <a href="{% url 'mode_public'%}" class="btn btn-danger">Public</a>
+                    {% endif %}
+                    <a class="btn btn-success ml-3" href="{% url "pass" %}">change password</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-lg-8">
+              <div class="card mb-4">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Firtname</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{user.first_name}}</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">LastName</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{user.last_name}}</p>
+                    </div>
+                  </div>
+                  <hr>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Email</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{user.email}}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <p class="mb-4"><span class="text-primary font-italic me-1">Post </span>  Favorites
+                      </p>
+                      {%for favorites in favorites%}
+                      <p class="mb-1" style="font-size: .77rem;">{{favorites.post}}</p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <p class="mb-4"><span class="text-primary font-italic me-1">Posted </span> articles</p>
+                        {%for readinghistory in readinghistory%}
+                          <p class="mb-1" style="font-size: .77rem;">{{readinghistory.post}} 
+                            <a href="{% url "del_history" readinghistory.id  %}"><i class="fa-solid fa-delete-left"></i></a>
+                          </p>
+                        {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="card mb-4 mb-md-0">
+                    <div class="card-body">
+                      <p class="mb-4"><span class="text-primary font-italic me-1">Post </span>  Review
+                      </p>
+                      {%for reviews in reviews%}
+                      <p class="mb-1" style="font-size: .77rem;">{{reviews.post}} - {{reviews.rating}} <a href="{% url "del_review" reviews.id  %}"> Xoa</a></p>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+</div>
+{%endblock%}

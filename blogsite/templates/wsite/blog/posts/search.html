@@ -1,0 +1,62 @@
+{% extends "wsite/base.html" %}
+{%block content%}
+<style>
+    .card-text {
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        word-break: break-word;
+        margin-right: 20px;
+    }
+</style>
+<div class="container">
+    <h3 class="mt-5">Result search for: {{searched}}</h><br>
+    <hr>    
+    {% if page|length == 0 %}
+        không tìm thấy
+    {% else %}
+<section class="featured-posts">
+        <div class="section-title">
+            <h2><span>
+                <a href="#">Featured</a> - <a href="#">HOT</a>
+            </span></h2>
+        </div>
+        <div class="card-columns listfeaturedtag">
+           {%for post in page.object_list%}
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-5 wrapthumbnail">
+                        <a href="{% url 'detail_post' post_id=post.id %}">
+                            <div class="thumbnail">
+                                <img src="{{MEDIA_URL}}//{{ post.image }}" alt="Ảnh DXT" height=100%>
+                            </div>
+                        </a>    
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-block">
+                            <h2 class="card-title"><a href="{% url 'detail_post' post_id=post.id %}">{{post.title}}</a></h2>
+                            <h4 class="card-text">{{post.content}}</h4>
+                            <div class="metafooter">
+                                <div class="wrapfooter">
+                                    <span class="meta-footer-thumb">
+                                     <img class="author-thumb" src="{{ post.author.userprofileinfo.profile_pic.url }}" alt="Sal">
+                                    </span>
+                                    <span class="author-meta">
+                                        <span class="post-name">{{post.author}}</span><br/>
+                                        <span class="post-date">{{post.created_at}}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %} 
+        </div>
+</section>
+        <!-- Hiển thị phân trang -->
+        
+    {% endif %}
+</div>
+{% endblock %}

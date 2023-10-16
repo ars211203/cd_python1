@@ -1,0 +1,162 @@
+{% extends "wsite/base.html" %}
+{%load static%}
+{%block content%}
+<div class="container pt-4 pb-4">
+	<div class="row justify-content-center">
+		<div class="text-center">
+			Share <i class="fa-solid fa-share-nodes"></i><br> 
+			<a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}"><i class="fa-brands fa-facebook-f"></i></a>
+			<hr>
+			<p>favorite</p>
+			{% comment %} favorite {% endcomment %}
+			{% if user.is_authenticated %}
+				{% if is_favorite and is_favorite == True %}
+					<a href="{% url 'del_favorite' favorite.id %}"><i class="fa-solid fa-heart-circle-xmark"></i></i></a>
+				{% else %}
+					<a href="{% url 'add_favorite' post.id %}"><i class="fa-solid fa-heart"></i></a>
+				{% endif %}
+			{% endif %}
+		</div>
+		<div class="col-lg-2 pr-4 mb-4 col-md-12">
+			<div class="thumbnail">
+				<img src="{{MEDIA_URL}}/{{ post.image }}" alt="Ảnh DXT" height=100%>
+			</div>
+		</div>
+		<div class="col-md-12 col-lg-8">
+			<article class="article-post">
+			<p>
+				{{ post.title }}
+				  
+			</p>
+			<p style="word-wrap: break-word;">
+				{{post.content}}
+			</p>
+
+			</article>
+			<div class="border p-5 bg-lightblue">
+				<div class="row justify-content-between">
+					<div class="col-md-5 mb-2 mb-md-0">
+						<h5 class="font-weight-bold secondfont"></h5>
+						hãy để lại bình luận cho bài viết ngay bây giờ
+					</div>
+					<div class="col-md-7">
+						<form method="POST" action="{% url 'comment_post' post.id %}">
+							{% csrf_token %}
+							<div class="row">
+								<div class="col-md-12">
+									<input type="text" name="content" class="form-control" placeholder="Enter your comment">
+								</div>
+								<div class="col-md-12 mt-2">
+									<button type="submit" class="btn btn-success btn-block">Comment now</button>
+								</div>
+							</div>
+						</form> 
+					</div>
+				</div>
+			</div>
+		</div>			
+
+	</div>
+</div>
+<div class="container" id="show comment">
+	<section style="background-color: #ad655f;">
+		<div class="container my-5 py-5">
+		  <div class="row d-flex justify-content-center">
+			<div class="col-md-12 col-lg-10">
+			  <div class="card text-dark">
+				<div class="card-body p-4">
+				  <h4 class="mb-0">Recent comments</h4>
+				  <p class="fw-light mb-4 pb-2">Latest Comments section by users</p>
+				{% comment %} start comment {% endcomment %}
+				{%for data in comment%}
+				  <div class="d-flex flex-start mt-3">
+					<img class="rounded-circle shadow-1-strong me-3"
+					src="{{ post.author.userprofileinfo.profile_pic.url }}" alt="avatar" width="60"
+					  height="60" />
+					<div class="ml-3">
+					  <h6 class="fw-bold mb-1">{{data.author}}</h6>
+					  <div class="d-flex align-items-center mb-3">
+						<p class="mb-0">
+						  {{data.created_at}}
+						</p>
+					  </div>
+					  <p class="mb-0">{{data.content}}</p>
+					</div>
+				  </div>
+				  <hr class="my-0" />
+				  {% endfor %}
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </section>
+</div>
+<div class="container pt-4 pb-4">
+	<h5 class="font-weight-bold spanborder"><span>Read next</span></h5>
+	<div class="row">
+		<div class="col-lg-6">
+			<div class="alert alert-info alert-dismissible fade show" role="alert">
+				<strong style="color:grey">Nếu bạn thấy bài viết hay, hãy để lại bình luận và thêm vào yêu thích nếu bạn thấy hứng thú!</strong>
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			{% comment %} <form method="post">
+				{% csrf_token %}
+				<select name="rating" >
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>	
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>
+				<button type="submit">Rate</button>
+			</form> {% endcomment %}
+			{% if is_rating == False %}
+			
+			{% endif %}
+			<h3>Tất cả đánh giá</h3>
+			<table class="table">
+				<thead>
+					<tr>
+						<th scope="col">Nguoi dung</th>
+						<th scope="col">Rating</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for data in review %}
+					<tr>
+						<td scope="row">{{data.author}}</td>
+						<td>{{data.rating}}</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+
+		</div>	
+		<div class="col-lg-6">
+			<h3 class="text-uppercase text-success">Related Posts</h3>
+			<hr>
+			<div class="flex-md-row mb-4 box-shadow h-xl-300">
+				{% if related_posts %}
+					{% for data in related_posts  %}
+					<div class="mb-3 d-flex align-items-center">
+						<img height="80" src="{{ MEDIA_URL }}/{{ data.image }}">
+						<div class="pl-3">
+							<h2 class="mb-2 h6 font-weight-bold">
+							<a class="text-dark" href="{% url "detail_post" post.id %}">{{data.title}}</a>
+							</h2>
+							<div class="card-text text-muted small">
+								{{data.author}}
+							</div>
+							<small class="text-muted">{{data.created_at}}</small>
+						</div>
+					</div>
+					{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>
+{%endblock%}
